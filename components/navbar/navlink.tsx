@@ -12,9 +12,12 @@ function Navlink() {
     return (
         <>
             {session?.user ?(
-                <div className="flex items-center justify-end md:order-2">
+                <div className="flex items-center gap-2.5 justify-end md:order-2">
                     <div className="hidden text-sm bg-gray-50 border rounded-full md:me-0 md:block focus:ring-4 focus:ring-gray-300">
-                        <Image src={session.user.image || "/avatar.svg"} width={64} height={64} alt="User Profile Image"/>
+                        <Image src={session.user.image || "/avatar.svg"} width={64} height={64} alt="User Profile Image" className="rounded-full size-12"/>
+                    </div>
+                    <div className="flex items-center">
+                        <button onClick={()=>signOut()} className="md:block hidden py-2 px-4 bg-red-500 text-white hover:bg-red-300 hover:border-none rounded-sm cursor-pointer">Sign Out</button>
                     </div>
                 </div>
             ):null}
