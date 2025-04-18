@@ -12,7 +12,7 @@ export const metadata:Metadata = {
 function AboutPage() {
   return (
     <div>
-       <HeaderSection title='About us' subtitle='Lorem ipsum dolor sit amet.'/>
+       <HeaderSection title='About us' subtitle='Lorem ipsum dolor sit amet.' className='text-orange-500'/>
        <div className="max-w-screen-xl mx-auto py-20 px-4">
             <div className="grid md:grid-cols-2 gap-8">
                 <Image src="/about-image.jpg" width={650} height={579} alt='About Image'/>

@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// jalankan perintah npx prisma migrate dev untuk migrasi model database ke database mysql asli
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
@@ -102,4 +103,21 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subscribe {
+  id        String   @id @default(cuid())
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

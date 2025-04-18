@@ -4,83 +4,84 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// jalankan perintah npx prisma migrate dev untuk migrasi model database ke database mysql asli
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
-}   
+}
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Room {
-  id String @id @default(cuid())
-  name String 
-  description String @db.Text
-  image String
-  price Int
-  capacity Int @default(1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String          @id @default(cuid())
+  name          String
+  description   String          @db.Text
+  image         String
+  price         Int
+  capacity      Int             @default(1)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   RoomAmenities RoomAmenities[]
-  Reservation Reservation[]
+  Reservation   Reservation[]
 }
 
 model Amenities {
-  id String @id @default(cuid())
-  name String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String          @id @default(cuid())
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   RoomAmenities RoomAmenities[]
 }
 
 model RoomAmenities {
-  id String @id @default(cuid())
-  roomId String
-  Room Room @relation(fields: [roomId],references: [id],onDelete: Cascade)
+  id          String    @id @default(cuid())
+  roomId      String
+  Room        Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
   amenitiesId String
-  Amenities Amenities @relation(fields: [amenitiesId],references: [id],onDelete: Cascade)
+  Amenities   Amenities @relation(fields: [amenitiesId], references: [id], onDelete: Cascade)
 }
 
 model Reservation {
-  id String @id @default(cuid())
-  startDate DateTime 
-  endDate DateTime
-  price Int 
-  userId String
-  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
-  roomId String
-  Room Room @relation(fields: [roomId],references: [id],onDelete: Cascade)
+  id        String   @id @default(cuid())
+  startDate DateTime
+  endDate   DateTime
+  price     Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roomId    String
+  Room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Payment Payment?
+  Payment   Payment?
 }
 
 model Payment {
-  id String @id @default(cuid())
-  method String?
-  amount Int
-  status String @default("unpaid")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  reservationId String @unique
-  Reservation Reservation @relation(fields: [reservationId],references: [id],onDelete: Cascade)
+  id            String      @id @default(cuid())
+  method        String?
+  amount        Int
+  status        String      @default("unpaid")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  reservationId String      @unique
+  Reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String        @unique
   emailVerified DateTime?
   image         String?
-  role String @default("user") 
-  phone String?
+  role          String        @default("user")
+  phone         String?
   accounts      Account[]
-  Reservation Reservation[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  Reservation   Reservation[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model Account {
@@ -95,11 +96,28 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subscribe {
+  id        String   @id @default(cuid())
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
