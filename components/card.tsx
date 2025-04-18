@@ -5,7 +5,7 @@ import { IoPeopleOutline } from 'react-icons/io5'
 
 function Card() {
   return (
-    <div className='bg-white shadow-lg rounded-sm transition duration-100 hover:shadow-xl hover:cursor-pointer'>
+    <div className='bg-white shadow-lg rounded-sm transition duration-200 hover:shadow-xl hover:cursor-pointer hover:transform hover:-translate-y-4 hover:scale-105'>
         <div className="h-[260px] w-auto rounded-t-sm relative">
             <Image 
               src="/hero.jpg" 

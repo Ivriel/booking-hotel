@@ -12,6 +12,13 @@ function Footer() {
     const [subscribeEmail, setSubscribeEmail] = useState('')
     const [state, formAction, isPending] = useActionState(subscribeNewsletter, null)
 
+    // reset isi value kalau udah kekirim
+    useEffect(() => {
+        if(state?.message) {
+            setSubscribeEmail('')
+            localStorage.removeItem('subscribeEmail')
+        }
+    }, [state?.message ])
     // dapatkan value saat halaman dimuat 
     useEffect(() => {
         setSubscribeEmail(localStorage.getItem('subscribeEmail') || '')
