@@ -115,7 +115,7 @@ model Contact {
   updatedAt DateTime @updatedAt
 }
 
-model Subscribe {
+model Subscribe { // subscribe email
   id        String   @id @default(cuid())
   email     String
   createdAt DateTime @default(now())
