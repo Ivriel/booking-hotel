@@ -1,36 +1,38 @@
 "use server";
-import { ContactSchema,RoomSchema } from "@/lib/zod";
+import { ContactSchema, RoomSchema } from "@/lib/zod";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { del } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 
-export const saveRoom = async (image:string,prevState:unknown,formData:FormData) => {
-    if(!image) return { // jika tidak ada image 
-        message:"Image is required"
+export const saveRoom = async (image: string, prevState: unknown, formData: FormData) => {
+    if (!image) return { // jika tidak ada image 
+        message: "Image is required"
     }
     const rawData = {
-        name:formData.get("name"),
-        description:formData.get("description"),
-        capacity:formData.get("capacity"),
+        name: formData.get("name"),
+        description: formData.get("description"),
+        capacity: formData.get("capacity"),
         price: formData.get("price"),
-        amenities:formData.getAll("amenities")
+        amenities: formData.getAll("amenities")
     }
     const validatedFields = RoomSchema.safeParse(rawData);
-    if(!validatedFields.success) {
-        return {error:validatedFields.error.flatten().fieldErrors}
+    if (!validatedFields.success) {
+        return { error: validatedFields.error.flatten().fieldErrors }
     }
-    const {name,description,price,capacity,amenities} = validatedFields.data
+    const { name, description, price, capacity, amenities } = validatedFields.data
     try {
         await prisma.room.create({
-            data:{
+            data: {
                 name,
                 description,
                 image,
                 price,
                 capacity,
-                RoomAmenities:{
-                    createMany:{
-                        data: amenities.map((item)=>({
-                            amenitiesId:item
+                RoomAmenities: {
+                    createMany: {
+                        data: amenities.map((item) => ({
+                            amenitiesId: item
                         }))
                     }
                 }
@@ -42,24 +44,37 @@ export const saveRoom = async (image:string,prevState:unknown,formData:FormData)
     redirect("/admin/room")
 }
 
-export const ContactMessage = async (prevState:unknown, formdata:FormData)=> {
+export const ContactMessage = async (prevState: unknown, formdata: FormData) => {
     const validatedFields = ContactSchema.safeParse(Object.fromEntries(formdata.entries()))
 
-    if(!validatedFields.success) {
-        return {error:validatedFields.error.flatten().fieldErrors};
+    if (!validatedFields.success) {
+        return { error: validatedFields.error.flatten().fieldErrors };
     }
-    const {name,email,subject,message} = validatedFields.data;
+    const { name, email, subject, message } = validatedFields.data;
     try {
         await prisma.contact.create({
-            data:{
+            data: {
                 name,
                 email,
                 subject,
                 message
             }
-        }); 
-        return {message:"Thanks for contact us"}
+        });
+        return { message: "Thanks for contact us" }
     } catch (error) {
         console.log(error)
     }
+}
+
+// Delete Room
+export const deleteRoom = async (id: string, image: string) => {
+    try {
+        await del(image)
+        await prisma.room.delete({
+            where: { id }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+    revalidatePath("/admin/room")
 }

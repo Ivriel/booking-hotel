@@ -62,18 +62,18 @@ function CreateForm({ amenities }: { amenities: Amenities[] }) {
 
     // bersihkan semua form kalau pengiriman berhasil wir
 
-// useEffect(() => {
-//     if(state?.message) {
-//       setRoomName('')
-//       setDescription('')
-//       setCapacity('')
-//       setPrice('')
-//       localStorage.removeItem('room_name')
-//       localStorage.removeItem('description')
-//       localStorage.removeItem('capacity')
-//       localStorage.removeItem('price')
-//     }
-//     },[state?.message])
+useEffect(() => {
+    if(state?.message) {
+      setRoomName('')
+      setDescription('')
+      setCapacity('')
+      setPrice('')
+      localStorage.removeItem('room_name')
+      localStorage.removeItem('description')
+      localStorage.removeItem('capacity')
+      localStorage.removeItem('price')
+    }
+    },[state?.message])
      // Ambil data dari localStorage saat komponen dimuat
      useEffect(() => {
       setRoomName(localStorage.getItem('room_name') || '');
