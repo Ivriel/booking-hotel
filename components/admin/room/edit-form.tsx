@@ -1,17 +1,18 @@
 "use client"
 import React from 'react'
 import { useRef, useState, useTransition, useActionState, useEffect } from 'react'
-import { saveRoom } from '@/lib/actions'
+import { updateRoom } from '@/lib/actions'
 import { IoCloudUploadOutline, IoTrashOutline } from 'react-icons/io5'
 import { type PutBlobResult } from '@vercel/blob'
 import Image from 'next/image'
 import { BarLoader } from 'react-spinners'
 import { Amenities } from '@prisma/client'
+import { RoomProps } from '@/type/room'
 import clsx from 'clsx'
 
-function CreateForm({ amenities }: { amenities: Amenities[] }) {
+function EditForm({ amenities,room }: { amenities: Amenities[]; room: RoomProps }) {
     const inputFileRef = useRef<HTMLInputElement>(null)
-    const [image, setImage] = useState("")
+    const [image, setImage] = useState(room.image)
     const [message, setMessage] = useState("")
     const [pending, startTransition] = useTransition()
     const [roomName, setRoomName] = useState("")    
@@ -58,7 +59,7 @@ function CreateForm({ amenities }: { amenities: Amenities[] }) {
         })
     }
 
-    const [state, formAction, isPending] = useActionState(saveRoom.bind(null, image), null);
+    const [state, formAction, isPending] = useActionState(updateRoom.bind(null, image,room.id), null);
 
     // bersihkan semua form kalau pengiriman berhasil wir
 
@@ -90,20 +91,22 @@ useEffect(() => {
         localStorage.setItem('price', price);
       }, [roomName,description,capacity,price]);
 
+      const checkedAmenities = room.RoomAmenities.map((item)=> item.amenitiesId)
+
     return (
         <form action={formAction}>
             <div className="grid md:grid-cols-12 gap-5">
                 <div className="col-span-8 shadow-lg bg-white p-4 rounded-lg">
                     <div className="mb-4">
-                        <input type="text" name="name" value={roomName}
+                        <input type="text" defaultValue={room.name} name="name"
                             onChange={(e) => setRoomName(e.target.value)} placeholder="Room Name" className='py-2 px-4 rounded-sm border border-gray-400 w-full' />
                         <div aria-live='polite' aria-atomic="true">
                             <span className='text-sm text-red-500 mt-2 '>{state?.error?.name}</span>
                         </div>
                     </div>
                     <div className="mb-4">
-                        <textarea name="description" value={description}
-                            onChange={(e) => setDescription(e.target.value)} placeholder='Description' rows={8} className='py-2 px-4 rounded-sm border border-gray-400 w-full'></textarea>
+                        <textarea name="description" 
+                            onChange={(e) => setDescription(e.target.value)} defaultValue={room.description} placeholder='Description' rows={8} className='py-2 px-4 rounded-sm border border-gray-400 w-full'></textarea>
                         <div aria-live='polite' aria-atomic="true">
                             <span className='text-sm text-red-500 mt-2 '>{state?.error?.description}</span>
                         </div>
@@ -111,7 +114,7 @@ useEffect(() => {
                     <div className="mb-4 grid md:grid-cols-3">
                         {amenities.map((item) => (
                             <div className='flex items-center mb-4' key={item.id}>
-                                <input type="checkbox" defaultValue={item.id} name="amenities" placeholder="Room Name" className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded' />
+                                <input type="checkbox" defaultValue={item.id} defaultChecked={checkedAmenities.includes(item.id)} name="amenities" placeholder="Room Name" className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded' />
                                 <label className='ms-2 text-sm font-medium text-gray-900 capitalize'>
                                     {item.name}
                                 </label>
@@ -151,14 +154,14 @@ useEffect(() => {
                             )}
                     </label>
                     <div className="mb-4">
-                        <input type="text" name="capacity" value={capacity}
+                        <input type="text" name="capacity" defaultValue={room.capacity}
                             onChange={(e) => setCapacity(e.target.value)} placeholder="Capacity" className='py-2 px-4 rounded-sm border border-gray-400 w-full' />
                         <div aria-live='polite' aria-atomic="true">
                             <span className='text-sm text-red-500 mt-2 '>{state?.error?.capacity}</span>
                         </div>
                     </div>
                     <div className="mb-4">
-                        <input type="text" name="price" value={price}
+                        <input type="text" name="price" defaultValue={room.price}
                             onChange={(e) => setPrice(e.target.value)} placeholder="Price" className='py-2 px-4 rounded-sm border border-gray-400 w-full' />
                         <div aria-live='polite' aria-atomic="true">
                             <span className='text-sm text-red-500 mt-2 '>{state?.error?.price}</span>
@@ -173,7 +176,7 @@ useEffect(() => {
                     <button type='submit' disabled={isPending} className={clsx('bg-orange-400 rounded-md text-white w-full hover:bg-orange-500 py-2.5 px-6 md:px-10 text-lg font-semibold cursor-pointer', {
                         "opacity-50 cursor-progress": isPending,
                     })}>
-                        {isPending ? "Saving..." : "Save"}
+                        {isPending ? "Updating..." : "Update"}
                     </button>
                 </div>
             </div>
@@ -181,4 +184,4 @@ useEffect(() => {
     )
 }
 
-export default CreateForm
+export default EditForm

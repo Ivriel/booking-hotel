@@ -2,7 +2,7 @@ import React from 'react'
 import { getRooms } from '@/lib/data'
 import Image from 'next/image'
 import { formatDate,formatCurrency } from '@/lib/utils'
-import { DeleteButton } from '@/components/admin/room/button'
+import { DeleteButton,EditButton } from '@/components/admin/room/button'
 
 
 async function RoomTable() {
@@ -43,7 +43,12 @@ async function RoomTable() {
               <td className='px-6 py-4'>{room.name}</td>
               <td className='px-6 py-4'>{formatCurrency(room.price)}</td>
               <td className='px-6 py-4'>{formatDate(room.createdAt.toString())}</td>
-              <td className='px-6 py-4 text-right' title='Delete Room'><DeleteButton id={room.id} image={room.image}/></td>
+              <td className='px-6 py-4 text-right' title='Delete Room'>
+                <div className='flex items-center justify-center gap-1'>
+                <EditButton id={room.id}/>
+                <DeleteButton id={room.id} image={room.image}/>
+                </div>
+                </td>
             </tr>
           ))}
 
