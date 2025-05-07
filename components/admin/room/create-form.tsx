@@ -33,11 +33,15 @@ function CreateForm({ amenities }: { amenities: Amenities[] }) {
                 const data = await response.json()
                 if (response.status !== 200) {
                     setMessage(data.message)
+                    console.error('Upload failed:', data.message)
+                    return
                 }
                 const img = data as PutBlobResult
+                console.log('Upload successful:', img.url)
                 setImage(img.url)
             } catch (error) {
-                console.log(error)
+                console.error('Upload error:', error)
+                setMessage('Failed to upload image. Please try again.')
             }
         })
     }
