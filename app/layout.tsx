@@ -14,7 +14,8 @@ const raleway = Raleway({
 
 export const metadata: Metadata = {
   title: "Home",
-  description: "Online Booking Hotel",
+  description: "Online Booking Hotel Website",
+  icons:"/favicon.ico"
 };
 
 export default async  function RootLayout({

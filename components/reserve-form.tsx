@@ -55,7 +55,7 @@ function ReserveForm({room}:{room:RoomDetailProps}) {
                     <p className="text-sm text-red-500 mt-2">{state?.error?.phone}</p>
                 </div>
             </div>
-            <button type='submit' disabled={isPending} className={clsx("px-10 py-3 text-center font-semibold text-white w-full bg-orange-400 rounded-sm cursor-pointer hover:bg-orange-500",{
+            <button type='submit' disabled={isPending} className={clsx(" cursor-pointer px-10 py-3 text-center font-semibold text-white w-full bg-orange-400 rounded-sm  hover:bg-orange-500",{
                 "opacity-50 cursor-progress":isPending,
             })}>
                 {isPending?"Loading...":"Reserve"}
