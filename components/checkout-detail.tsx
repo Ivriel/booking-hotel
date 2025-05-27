@@ -4,6 +4,7 @@ import { getReservationById } from '@/lib/data'
 import { formatDate,formatCurrency } from '@/lib/utils'
 import { differenceInCalendarDays } from 'date-fns'
 import clsx from 'clsx'
+import PaymentButton from '@/components/payment-button'
 
 async function CheckoutDetail({reservationId}:{reservationId:string}) {
     const reservation = await getReservationById(reservationId)
@@ -29,6 +30,7 @@ async function CheckoutDetail({reservationId}:{reservationId:string}) {
                 </div>
             </div>
             {/* Payment Button*/}
+            <PaymentButton reservation={reservation}/>
         </div>
         <div className="border border-gray-200 px-3 py-5 bg-white rounded-sm">
             <table className='w-full'>
